@@ -737,13 +737,23 @@ class TestSLT(TestBase):
         self.log(results)
         self.assertEqual(expect,results)
 
+    def testDocFormatted(self):
+        results = get_slt_from_mathml(self.mathml_doc, as_string=True, ignore_formatting=False)
+        expect = "[V!δ¡[≤¡[F![&comma;¡],o[V!ν¡[V!h¡[/¡[N!12¡]],a[N!2¡]],b[V!min¡]],u[V!h¡[M!1x1[+¡[V!C¡[V!ν¡,a[N!2¡],b[V!max¡]]]],o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡b[‖¡]]]]],a[N!2¡]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+
     def testQuery(self):
         results = get_slt_from_mathml(self.mathml_query, as_string=True)
         expect = "[M!1x1,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
         self.log(results)
         self.assertEqual(expect,results)
 
-
+    def testQueryFormatted(self):
+        results = get_slt_from_mathml(self.mathml_query, as_string=True, ignore_formatting=False)
+        expect = "[M!1x1,o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡[‖¡]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']

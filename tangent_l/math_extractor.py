@@ -98,7 +98,7 @@ class MathExtractor:
         return ET.tostring(pmml_markup)
 
     @classmethod
-    def convert_to_mathsymbol(cls, elem):
+    def convert_to_mathsymbol(cls, elem, ignore_formatting = True):
         """
         Parse expression from MathML
 
@@ -114,7 +114,7 @@ class MathExtractor:
             return None
         parser = ET.XMLParser(encoding="utf-8")
         root = ET.fromstring(elem, parser=parser)
-        return MathSymbol.parse_from_mathml(root)
+        return MathSymbol.parse_from_mathml(root, ignore_formatting)
 
     @classmethod
     def convert_and_link_mathml(cls, elem, document=None, position=None):
