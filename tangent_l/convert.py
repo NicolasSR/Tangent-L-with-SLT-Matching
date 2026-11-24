@@ -1,13 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-import argparse
-import logging
-import sys
 import os
 
 from tangent_l.math_extractor import MathExtractor
-from tangent_l.mathdocument import MathDocument
-from tangent_l.htmlStriper import strip_tags
 
 PAYLOAD_DELIMITER = "|__|"
 PAYLOAD_SEPARATOR = ":"
@@ -22,10 +15,7 @@ EDGES = ['n', 'a', 'b', 'c', 'o', 'u', 'd', 'w', 'e']
 WILDCARD_MOCK = "?x"
 WILDCARD = "*"
 WINDOWS = "nt"
-if os.name == WINDOWS:
-    ENCODING = "utf-8"
-else:
-    ENCODING = "utf-8"
+ENCODING = "utf-8"
 
 
 def convert_math_expression(mathml,
@@ -286,267 +276,267 @@ def format_paragraph(paragraph, query):
     return striped
 
 
-def convert_file_to_words(filename,
-                          window_size=1,
-                          symbol_pairs=True,
-                          eol=False,
-                          compound_symbols=False,
-                          terminal_symbols=False,
-                          edge_pairs=False,
-                          unbounded=False,
-                          shortened=True,
-                          location=False,
-                          synonyms=False,
-                          query=False,
-                          no_payload=True,
-                          expand_location=False):
-    """Parses a file and returns a of words
-    Parameters:
-        filename: the name of the file to parse
-        file_id: the file id
-        output_file: the name of the file to output to
-    Returns:
-        result: the list of words and math tuples
-    """
-    (ext, content) = MathDocument.read_doc_file(filename)
-    tokens = ""
-    while len(content) != 0:
-        (start, end) = MathExtractor.next_math_token(content)
-        if start == -1:
-            # can just print the rest
-            tokens += " " + format_paragraph(content, query)
-            content = ""
-        else:
-            paragraph = format_paragraph(content[0:start], query)
-            ex = convert_math_expression(content[start:end],
-                                         window_size=1,
-                                         symbol_pairs=symbol_pairs,
-                                         eol=eol,
-                                         compound_symbols=compound_symbols,
-                                         terminal_symbols=terminal_symbols,
-                                         edge_pairs=edge_pairs,
-                                         unbounded=unbounded,
-                                         shortened=shortened,
-                                         location=location,
-                                         synonyms=synonyms,
-                                         no_payload=no_payload,
-                                         expand_location=expand_location)
-            tokens += " " + paragraph + " " + ex
-            # now move the content further along
-            content = content[end:]
-    return tokens
+# def convert_file_to_words(filename,
+#                           window_size=1,
+#                           symbol_pairs=True,
+#                           eol=False,
+#                           compound_symbols=False,
+#                           terminal_symbols=False,
+#                           edge_pairs=False,
+#                           unbounded=False,
+#                           shortened=True,
+#                           location=False,
+#                           synonyms=False,
+#                           query=False,
+#                           no_payload=True,
+#                           expand_location=False):
+#     """Parses a file and returns a of words
+#     Parameters:
+#         filename: the name of the file to parse
+#         file_id: the file id
+#         output_file: the name of the file to output to
+#     Returns:
+#         result: the list of words and math tuples
+#     """
+#     (ext, content) = MathDocument.read_doc_file(filename)
+#     tokens = ""
+#     while len(content) != 0:
+#         (start, end) = MathExtractor.next_math_token(content)
+#         if start == -1:
+#             # can just print the rest
+#             tokens += " " + format_paragraph(content, query)
+#             content = ""
+#         else:
+#             paragraph = format_paragraph(content[0:start], query)
+#             ex = convert_math_expression(content[start:end],
+#                                          window_size=1,
+#                                          symbol_pairs=symbol_pairs,
+#                                          eol=eol,
+#                                          compound_symbols=compound_symbols,
+#                                          terminal_symbols=terminal_symbols,
+#                                          edge_pairs=edge_pairs,
+#                                          unbounded=unbounded,
+#                                          shortened=shortened,
+#                                          location=location,
+#                                          synonyms=synonyms,
+#                                          no_payload=no_payload,
+#                                          expand_location=expand_location)
+#             tokens += " " + paragraph + " " + ex
+#             # now move the content further along
+#             content = content[end:]
+#     return tokens
 
 
-def parse_file_to_output(filename,
-                         file_id,
-                         window_size=1,
-                         symbol_pairs=True,
-                         eol=False,
-                         compound_symbols=False,
-                         terminal_symbols=False,
-                         edge_pairs=False,
-                         unbounded=False,
-                         shortened=True,
-                         location=False,
-                         synonyms=False,
-                         query=True,
-                         expand_location=False):
-    """Parses a file and outputs to standard out
+# def parse_file_to_output(filename,
+#                          file_id,
+#                          window_size=1,
+#                          symbol_pairs=True,
+#                          eol=False,
+#                          compound_symbols=False,
+#                          terminal_symbols=False,
+#                          edge_pairs=False,
+#                          unbounded=False,
+#                          shortened=True,
+#                          location=False,
+#                          synonyms=False,
+#                          query=True,
+#                          expand_location=False):
+#     """Parses a file and outputs to standard out
 
-    Parameters:
-        filename: the name of the file to parse
-        file_id: the file id
-    """
-    (ext, content) = MathDocument.read_doc_file(filename)
-    while len(content) != 0:
-        (start, end) = MathExtractor.next_math_token(content)
-        if start == -1:
-            # can just print the rest
-            print(format_paragraph(content, query).encode(ENCODING), end="")
-            content = ""
-        else:
-            paragraph = format_paragraph(content[0:start], query)
-            ex = convert_math_expression(content[start:end],
-                                         window_size=1,
-                                         symbol_pairs=symbol_pairs,
-                                         eol=eol,
-                                         compound_symbols=compound_symbols,
-                                         terminal_symbols=terminal_symbols,
-                                         edge_pairs=edge_pairs,
-                                         unbounded=unbounded,
-                                         shortened=shortened,
-                                         location=location,
-                                         synonyms=synonyms,
-                                         expand_location=expand_location)
-            print(paragraph.encode(ENCODING))
-            print(ex.encode(ENCODING))
-            # now move the content further along
-            content = content[end:]
+#     Parameters:
+#         filename: the name of the file to parse
+#         file_id: the file id
+#     """
+#     (ext, content) = MathDocument.read_doc_file(filename)
+#     while len(content) != 0:
+#         (start, end) = MathExtractor.next_math_token(content)
+#         if start == -1:
+#             # can just print the rest
+#             print(format_paragraph(content, query).encode(ENCODING), end="")
+#             content = ""
+#         else:
+#             paragraph = format_paragraph(content[0:start], query)
+#             ex = convert_math_expression(content[start:end],
+#                                          window_size=1,
+#                                          symbol_pairs=symbol_pairs,
+#                                          eol=eol,
+#                                          compound_symbols=compound_symbols,
+#                                          terminal_symbols=terminal_symbols,
+#                                          edge_pairs=edge_pairs,
+#                                          unbounded=unbounded,
+#                                          shortened=shortened,
+#                                          location=location,
+#                                          synonyms=synonyms,
+#                                          expand_location=expand_location)
+#             print(paragraph.encode(ENCODING))
+#             print(ex.encode(ENCODING))
+#             # now move the content further along
+#             content = content[end:]
 
 
-def parse_file(filename,
-               file_id,
-               output_file,
-               window_size=1,
-               symbol_pairs=True,
-               eol=False,
-               compound_symbols=False,
-               terminal_symbols=False,
-               edge_pairs=False,
-               unbounded=False,
-               shortened=True,
-               location=False,
-               synonyms=False,
-               query=True,
-               expand_location=False):
-    """Parses a file and ouputs to a file with math tuples
+# def parse_file(filename,
+#                file_id,
+#                output_file,
+#                window_size=1,
+#                symbol_pairs=True,
+#                eol=False,
+#                compound_symbols=False,
+#                terminal_symbols=False,
+#                edge_pairs=False,
+#                unbounded=False,
+#                shortened=True,
+#                location=False,
+#                synonyms=False,
+#                query=True,
+#                expand_location=False):
+#     """Parses a file and ouputs to a file with math tuples
 
-    Parameters:
-        filename: the name of the file to parse
-        file_id: the file id
-        output_file: the name of the file to output to
-    """
-    (ext, content) = MathDocument.read_doc_file(filename)
-    with open(output_file, "w+", encoding=ENCODING) as out:
-        while len(content) != 0:
-            (start, end) = MathExtractor.next_math_token(content)
-            if start == -1:
-                # can just print the rest
-                print(format_paragraph(content, query), end="", file=out)
-                content = ""
-            else:
-                paragraph = format_paragraph(content[0:start], query)
-                ex = convert_math_expression(content[start:end],
-                                             window_size=1,
-                                             symbol_pairs=symbol_pairs,
-                                             eol=eol,
-                                             compound_symbols=compound_symbols,
-                                             terminal_symbols=terminal_symbols,
-                                             edge_pairs=edge_pairs,
-                                             unbounded=unbounded,
-                                             shortened=shortened,
-                                             location=location,
-                                             synonyms=synonyms,
-                                             expand_location=expand_location)
-                print(paragraph, file=out)
-                print(ex, file=out)
-                # now move the content further along
-                content = content[end:]
+#     Parameters:
+#         filename: the name of the file to parse
+#         file_id: the file id
+#         output_file: the name of the file to output to
+#     """
+#     (ext, content) = MathDocument.read_doc_file(filename)
+#     with open(output_file, "w+", encoding=ENCODING) as out:
+#         while len(content) != 0:
+#             (start, end) = MathExtractor.next_math_token(content)
+#             if start == -1:
+#                 # can just print the rest
+#                 print(format_paragraph(content, query), end="", file=out)
+#                 content = ""
+#             else:
+#                 paragraph = format_paragraph(content[0:start], query)
+#                 ex = convert_math_expression(content[start:end],
+#                                              window_size=1,
+#                                              symbol_pairs=symbol_pairs,
+#                                              eol=eol,
+#                                              compound_symbols=compound_symbols,
+#                                              terminal_symbols=terminal_symbols,
+#                                              edge_pairs=edge_pairs,
+#                                              unbounded=unbounded,
+#                                              shortened=shortened,
+#                                              location=location,
+#                                              synonyms=synonyms,
+#                                              expand_location=expand_location)
+#                 print(paragraph, file=out)
+#                 print(ex, file=out)
+#                 # now move the content further along
+#                 content = content[end:]
 
-if __name__ == "__main__":
-    logging.basicConfig(filename="convert.log",
-                        level=logging.INFO,
-                        format='%(asctime)s %(message)s')
-    logger = logging.getLogger(__name__)
-    descp = "Convert - MathML file to file with Tangent Tuples"
-    parser = argparse.ArgumentParser(description=descp)
-    parser.add_argument('-infile',
-                        '--infile',
-                        help='The file to read from',
-                        required=True)
-    parser.add_argument('-outfile',
-                        '--outfile',
-                        help='The file to output to')
-    parser.add_argument("-query",
-                        dest="query",
-                        action="store_true",
-                        help="True if a query file",
-                        default=False)
-    parser.add_argument("-symbol_pairs",
-                        dest="symbol_pairs",
-                        action="store_false",
-                        help="Do not use symbol pairs",
-                        default=True)
-    parser.add_argument('-eol',
-                        dest="eol",
-                        action="store_true",
-                        help="Use EOL tuples",
-                        default=False)
-    parser.add_argument('-expand_location',
-                        dest="expand_location",
-                        action="store_true",
-                        help="Expand tuples to include location",
-                        default=False)
-    parser.add_argument('-compound_symbols',
-                        dest="compound_symbols",
-                        action="store_true",
-                        help="Use compound symbols",
-                        default=False)
-    parser.add_argument('-terminal_symbols',
-                        dest="terminal_symbols",
-                        action="store_true",
-                        help="Use terminal symbols",
-                        default=False)
-    parser.add_argument('-edge_pairs',
-                        dest="edge_pairs",
-                        action="store_true",
-                        help="Use edge pairs",
-                        default=False)
-    parser.add_argument('-unbounded',
-                        dest="unbounded",
-                        action="store_true",
-                        help="Whether symbol pairs should be unbounded",
-                        default=False)
-    parser.add_argument('-shortened',
-                        dest="shortened",
-                        action="store_false",
-                        help="Whether symbol pairs should be unbounded",
-                        default=True)
-    parser.add_argument('-synonyms',
-                        dest="synonyms",
-                        action="store_true",
-                        help="Whether to expand nodes to include synonyms",
-                        default=False)
-    prompt = "Whether to include location or not in symbol pairs"
-    parser.add_argument('-location',
-                        dest="location",
-                        action="store_true",
-                        help=prompt,
-                        default=False)
-    parser.add_argument('-window_size',
-                        dest="window_size",
-                        default=1,
-                        type=int,
-                        help='The size of the window',
-                        nargs='?')
-    args = parser.parse_args()
-    infile = None
-    outfile = None
-    if args.infile is not None:
-        infile = args.infile
-    if args.outfile is not None:
-        outfile = args.outfile
-        logger.info(infile)
-        logger.info(outfile)
-        parse_file(infile,
-                   0,
-                   outfile,
-                   window_size=args.window_size,
-                   symbol_pairs=args.symbol_pairs,
-                   eol=args.eol,
-                   compound_symbols=args.compound_symbols,
-                   terminal_symbols=args.terminal_symbols,
-                   edge_pairs=args.edge_pairs,
-                   unbounded=args.unbounded,
-                   shortened=args.shortened,
-                   location=args.location,
-                   synonyms=args.synonyms,
-                   query=args.query,
-                   expand_location=args.expand_location
-                   )
-    else:
-        parse_file_to_output(infile,
-                             0,
-                             window_size=args.window_size,
-                             symbol_pairs=args.symbol_pairs,
-                             eol=args.eol,
-                             compound_symbols=args.compound_symbols,
-                             terminal_symbols=args.terminal_symbols,
-                             edge_pairs=args.edge_pairs,
-                             unbounded=args.unbounded,
-                             shortened=args.shortened,
-                             location=args.location,
-                             synonyms=args.synonyms,
-                             query=args.query,
-                             expand_location=args.expand_location)
-    logger.info("Done")
+# if __name__ == "__main__":
+#     logging.basicConfig(filename="convert.log",
+#                         level=logging.INFO,
+#                         format='%(asctime)s %(message)s')
+#     logger = logging.getLogger(__name__)
+#     descp = "Convert - MathML file to file with Tangent Tuples"
+#     parser = argparse.ArgumentParser(description=descp)
+#     parser.add_argument('-infile',
+#                         '--infile',
+#                         help='The file to read from',
+#                         required=True)
+#     parser.add_argument('-outfile',
+#                         '--outfile',
+#                         help='The file to output to')
+#     parser.add_argument("-query",
+#                         dest="query",
+#                         action="store_true",
+#                         help="True if a query file",
+#                         default=False)
+#     parser.add_argument("-symbol_pairs",
+#                         dest="symbol_pairs",
+#                         action="store_false",
+#                         help="Do not use symbol pairs",
+#                         default=True)
+#     parser.add_argument('-eol',
+#                         dest="eol",
+#                         action="store_true",
+#                         help="Use EOL tuples",
+#                         default=False)
+#     parser.add_argument('-expand_location',
+#                         dest="expand_location",
+#                         action="store_true",
+#                         help="Expand tuples to include location",
+#                         default=False)
+#     parser.add_argument('-compound_symbols',
+#                         dest="compound_symbols",
+#                         action="store_true",
+#                         help="Use compound symbols",
+#                         default=False)
+#     parser.add_argument('-terminal_symbols',
+#                         dest="terminal_symbols",
+#                         action="store_true",
+#                         help="Use terminal symbols",
+#                         default=False)
+#     parser.add_argument('-edge_pairs',
+#                         dest="edge_pairs",
+#                         action="store_true",
+#                         help="Use edge pairs",
+#                         default=False)
+#     parser.add_argument('-unbounded',
+#                         dest="unbounded",
+#                         action="store_true",
+#                         help="Whether symbol pairs should be unbounded",
+#                         default=False)
+#     parser.add_argument('-shortened',
+#                         dest="shortened",
+#                         action="store_false",
+#                         help="Whether symbol pairs should be unbounded",
+#                         default=True)
+#     parser.add_argument('-synonyms',
+#                         dest="synonyms",
+#                         action="store_true",
+#                         help="Whether to expand nodes to include synonyms",
+#                         default=False)
+#     prompt = "Whether to include location or not in symbol pairs"
+#     parser.add_argument('-location',
+#                         dest="location",
+#                         action="store_true",
+#                         help=prompt,
+#                         default=False)
+#     parser.add_argument('-window_size',
+#                         dest="window_size",
+#                         default=1,
+#                         type=int,
+#                         help='The size of the window',
+#                         nargs='?')
+#     args = parser.parse_args()
+#     infile = None
+#     outfile = None
+#     if args.infile is not None:
+#         infile = args.infile
+#     if args.outfile is not None:
+#         outfile = args.outfile
+#         logger.info(infile)
+#         logger.info(outfile)
+#         parse_file(infile,
+#                    0,
+#                    outfile,
+#                    window_size=args.window_size,
+#                    symbol_pairs=args.symbol_pairs,
+#                    eol=args.eol,
+#                    compound_symbols=args.compound_symbols,
+#                    terminal_symbols=args.terminal_symbols,
+#                    edge_pairs=args.edge_pairs,
+#                    unbounded=args.unbounded,
+#                    shortened=args.shortened,
+#                    location=args.location,
+#                    synonyms=args.synonyms,
+#                    query=args.query,
+#                    expand_location=args.expand_location
+#                    )
+#     else:
+#         parse_file_to_output(infile,
+#                              0,
+#                              window_size=args.window_size,
+#                              symbol_pairs=args.symbol_pairs,
+#                              eol=args.eol,
+#                              compound_symbols=args.compound_symbols,
+#                              terminal_symbols=args.terminal_symbols,
+#                              edge_pairs=args.edge_pairs,
+#                              unbounded=args.unbounded,
+#                              shortened=args.shortened,
+#                              location=args.location,
+#                              synonyms=args.synonyms,
+#                              query=args.query,
+#                              expand_location=args.expand_location)
+#     logger.info("Done")

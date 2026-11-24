@@ -1,13 +1,8 @@
-from collections import deque
-
 from tangent_l.exceptions import UnknownTagException
 from tangent_l.mathml import MathML
 
-import string
-import sys
 import re
 from html.parser import HTMLParser #RZ
-import symbol
 
 __author__ = 'Nidhin, FWTompa'
 

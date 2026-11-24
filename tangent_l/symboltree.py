@@ -1,7 +1,4 @@
-##import pickle
-##import requests as req
 import xml.etree.ElementTree as ET
-from collections import Counter
 import sys
 
 from tangent_l.mathsymbol import MathSymbol
@@ -131,7 +128,7 @@ class SymbolTree:
                 elif child_relation == "e":
                     current_element = child_node
                 else:
-                    print("Invalid child relation found: " + chid_relation)
+                    print("Invalid child relation found: " + child_relation)
 
         
         root = MathSymbol(label, current_next, current_above, current_below, current_over, current_under,

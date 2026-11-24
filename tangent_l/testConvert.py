@@ -7,7 +7,9 @@ Purpose: To test the convert of mathml to Tangent Tuples
 '''
 import unittest
 import os
+
 WINDOWS = "nt"
+TESTFILES_DIR = "tangent_l/testFiles"
 
 from tangent_l.convert import convert_math_expression,\
                             check_node,\
@@ -87,7 +89,7 @@ class TestSpecial(TestBase):
 class TestSymbolPairs(TestBase):
     def setUp(self):
         self.debug = True
-        self.file = os.path.join(os.getcwd(), "testFiles", "test_wildcard.xml")
+        self.file = os.path.join(os.getcwd(), TESTFILES_DIR, "test_wildcard.xml")
         self.mathml = self.loadFile(self.file)
 
     def tearDown(self):
@@ -111,7 +113,7 @@ class TestSymbolPairs(TestBase):
         self.assertEqual(" ".join(expect), results)
 
     def testConvertEdgePairs(self):
-        file = os.path.join(os.getcwd(), "testFiles", "test_edge_pair.xml")
+        file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_edge_pair.xml")
         mathml = self.loadFile(file)
         results = convert_math_expression(mathml,
                                           symbol_pairs=False,
@@ -133,14 +135,14 @@ class TestSymbolPairs(TestBase):
 class TestExpandLocation(TestBase):
     def setUp(self):
         self.debug = True
-        self.file = os.path.join(os.getcwd(), "testFiles", "test_wildcard.xml")
+        self.file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_wildcard.xml")
         self.mathml = self.loadFile(self.file)
 
     def tearDown(self):
         pass
 
     def testExpandLocation(self):
-        file = os.path.join(os.getcwd(), "testFiles", "test_edge_pair.xml")
+        file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_edge_pair.xml")
         mathml = self.loadFile(file)
         results = convert_math_expression(mathml,
                                           expand_location=True)
@@ -172,16 +174,16 @@ class TestExpandLocation(TestBase):
     def testExpandLocation2(self):
         nodes_list = [('m!()1x1', '?w', 'n', "-")]
         result = expand_nodes_with_location(nodes_list, 6)
-        self.assertEquals(len(result), 2)
+        self.assertEqual(len(result), 2)
         expect = [(('m!()1x1', '?w', 'n', '-'), '-:6'),
                   (('m!()1x1', '?w', 'n'), '-:6')]
-        self.assertEquals(result, expect)
+        self.assertEqual(result, expect)
 
 
 class TestDifferentWildcardReplacements(TestBase):
     def setUp(self):
         self.debug = True
-        self.file = os.path.join(os.getcwd(), "testFiles", "test_wildcard.xml")
+        self.file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_wildcard.xml")
         self.mathml = self.loadFile(self.file)
 
     def tearDown(self):
@@ -236,9 +238,9 @@ class TestDetermineNode(TestBase):
 class TestSynonym(TestBase):
     def setUp(self):
         self.debug = True
-        self.file = os.path.join(os.getcwd(), "testFiles", "test_1.xml")
+        self.file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_1.xml")
         self.mathml = self.loadFile(self.file)
-        self.file2 = os.path.join(os.getcwd(), "testFiles", "test_2.xml")
+        self.file2 = os.path.join(os.getcwd(),TESTFILES_DIR, "test_2.xml")
         self.mathml2 = self.loadFile(self.file2)
 
     def tearDown(self):
@@ -249,7 +251,7 @@ class TestSynonym(TestBase):
         expect = [('m!()1x1', '?w', 'n')]
         result = expand_node_with_wildcards(('m!()1x1', '?w', 'n'))
         self.log(result)
-        self.assertEquals(result, expect)
+        self.assertEqual(result, expect)
         # normal symbol pair
         expect = [('m!()1x1', 'n!1', 'n', "-"),
                   (WILDCARD_MOCK, 'n!1', 'n', "-"),
@@ -257,23 +259,23 @@ class TestSynonym(TestBase):
                   ]
         result = expand_node_with_wildcards(('m!()1x1', 'n!1', 'n', "-"))
         self.log(result)
-        self.assertEquals(result, expect)
+        self.assertEqual(result, expect)
         # terminal symbol
         result = expand_node_with_wildcards(('n!0', '!0', "-"))
         self.log(result)
         expect = [('n!0', '!0', "-")]
-        self.assertEquals(result, expect)
+        self.assertEqual(result, expect)
         # eol symbol
         result = expand_node_with_wildcards(('n!0', '!0', "n", "-"))
         expect = [('n!0', '!0', "n", "-")]
         self.log(result)
-        self.assertEquals(result, expect)
+        self.assertEqual(result, expect)
         # compound symbol
         expect = [('v!α', "['n', 'b']", "-"),
                   (WILDCARD_MOCK, "['n', 'b']", "-")]
         result = expand_node_with_wildcards(('v!α', "['n', 'b']", "-"))
         self.log(result)
-        self.assertEquals(result, expect)
+        self.assertEqual(result, expect)
 
     def testConvertWithSynonyms(self):
         results = convert_math_expression(self.mathml,
@@ -386,10 +388,10 @@ class TestTerminalQuery(TestBase):
     def setUp(self):
         self.debug = True
         self.f1 = os.path.join(os.getcwd(),
-                               "testFiles",
+                              TESTFILES_DIR,
                                "test_terminal_small_1.xml")
         self.f2 = os.path.join(os.getcwd(),
-                               "testFiles",
+                              TESTFILES_DIR,
                                "test_terminal_small_2.xml")
 
     def testF1(self):
@@ -414,7 +416,7 @@ class TestTerminalQuery(TestBase):
 class TestArxivQuery(TestBase):
     def setUp(self):
         self.debug = True
-        self.file = os.path.join(os.getcwd(), "testFiles", "test_1.xml")
+        self.file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_1.xml")
         self.mathml = self.loadFile(self.file)
 
     def tearDown(self):
@@ -502,7 +504,7 @@ class TestArxivQuery(TestBase):
 class TestRandomEquation(TestBase):
     def setUp(self):
         self.debug = True
-        self.file = os.path.join(os.getcwd(), "testFiles", "test_2.xml")
+        self.file = os.path.join(os.getcwd(),TESTFILES_DIR, "test_2.xml")
         self.mathml = self.loadFile(self.file)
 
     def tearDown(self):
