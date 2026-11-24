@@ -7,15 +7,10 @@ import unittest
 import argparse
 import os
 import shutil
-try:
-    from math_extractor import MathExtractor
-    from mathdocument import MathDocument
-    from tqdm import tqdm
-except ImportError:
-    from tangent.math_extractor import MathExtractor
-    from tangent.mathdocument import MathDocument
-    from tangent.tqdm import tqdm
 
+from tangent_l.math_extractor import MathExtractor
+from tangent_l.mathdocument import MathDocument
+from tangent_l.tqdm import tqdm
 
 def compare_doc_id(document_id, doc_id):
     """Returns True if the document id is the same as parsed from mathml

@@ -3,10 +3,8 @@
 import xml.etree.ElementTree as ET
 from collections import Counter
 import sys
-try:
-    from mathsymbol import MathSymbol
-except ImportError:
-    from tangent.mathsymbol import MathSymbol
+
+from tangent_l.mathsymbol import MathSymbol
 
 ET.register_namespace('', 'http://www.w3.org/1998/Math/MathML')
 

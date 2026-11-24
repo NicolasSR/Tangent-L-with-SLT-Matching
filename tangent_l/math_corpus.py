@@ -7,18 +7,13 @@ Purpose: Used to parse math documents and gensim to iterate through them
 '''
 from gensim import corpora
 from six import iteritems
-from tangent.htmlStriper import strip_tags
+from tangent_l.htmlStriper import strip_tags
 from nltk.stem.porter import PorterStemmer
 from nltk.corpus import stopwords
-try:
-    from math_extractor import MathExtractor
-    from mathdocument import MathDocument
-    from convert import convert_math_expression
-except ImportError:
-    from tangent.math_extractor import MathExtractor
-    from tangent.mathdocument import MathDocument
-    from tangent.convert import convert_math_expression
-import os
+
+from tangent_l.math_extractor import MathExtractor
+from tangent_l.mathdocument import MathDocument
+from tangent_l.convert import convert_math_expression
 
 STOP_WORDS = set(stopwords.words('english'))
 

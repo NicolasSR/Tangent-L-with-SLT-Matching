@@ -8,29 +8,17 @@ Purpose: To test the convert of mathml to Tangent Tuples
 import unittest
 import os
 WINDOWS = "nt"
-try:
-    from tangent.convert import convert_math_expression,\
-                                check_node,\
-                                check_wildcard,\
-                                determine_node,\
-                                expand_nodes_with_location,\
-                                expand_node_with_wildcards,\
-                                EDGE_PAIR_NODE, COMPOUND_NODE, \
-                                EOL_NODE, TERMINAL_NODE, SYMBOL_PAIR_NODE,\
-                                WILDCARD_MOCK, START_TAG, END_TAG,\
-                                PAYLOAD_DELIMITER as P_D
-except ImportError:
-    from convert import convert_math_expression,\
-                                check_node,\
-                                check_wildcard,\
-                                determine_node,\
-                                expand_nodes_with_location,\
-                                expand_node_with_wildcards,\
-                                EDGE_PAIR_NODE, COMPOUND_NODE, \
-                                EOL_NODE, TERMINAL_NODE, SYMBOL_PAIR_NODE,\
-                                WILDCARD_MOCK, START_TAG, END_TAG,\
-                                PAYLOAD_DELIMITER as P_D
 
+from tangent_l.convert import convert_math_expression,\
+                            check_node,\
+                            check_wildcard,\
+                            determine_node,\
+                            expand_nodes_with_location,\
+                            expand_node_with_wildcards,\
+                            EDGE_PAIR_NODE, COMPOUND_NODE, \
+                            EOL_NODE, TERMINAL_NODE, SYMBOL_PAIR_NODE,\
+                            WILDCARD_MOCK, START_TAG, END_TAG,\
+                            PAYLOAD_DELIMITER as P_D
 
 class TestBase(unittest.TestCase):
     def loadFile(self, math_file):

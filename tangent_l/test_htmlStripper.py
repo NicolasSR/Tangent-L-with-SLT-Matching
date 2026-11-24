@@ -6,10 +6,8 @@ Project: Tangent GT
 Purpose: Tests html stripper
 '''
 import unittest
-try:
-    from htmlStriper import strip_tags
-except ImportError:
-    from tangent.htmlStriper import strip_tags
+
+from tangent_l.htmlStriper import strip_tags
 
 
 class TestStriper(unittest.TestCase):

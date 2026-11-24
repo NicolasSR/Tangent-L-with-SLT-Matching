@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tangent-l-with-slt-matching"
+version = "1.0"
+description = "Fork of fras2560/Tangent-L. Only keeps the SLT and tuples creation code, and adds methods for direct SLT matching."
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.11"
+authors = [
+  { name = "Nicolas Sibuet", email = "nicolas.sibuet@upc.edu" },
+  { name = "Dallas Fraser" },
+  { name = "Nidhin Pattaniyil" },
+  { name = "David Stalnaker" },
+  { name = "Frank Tompa" },
+  { name = "Richard Zanibbi" },
+]
+keywords = ["MathIR", "MathML formula retrieval", "Tangent-L", "math tuples"]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+]
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://github.com/NicolasSR/tangent-l-with-slt-matching"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tangent_l*"]
+
+[tool.setuptools.package-data]
+tangent_l = ["testFiles/*.html", "testFiles/*.xml"]

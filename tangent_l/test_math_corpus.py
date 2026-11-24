@@ -5,14 +5,11 @@ Date: 2017-07-27
 Project: Tangent GT
 Purpose: Tests the math corpus file
 '''
-try:
-    from math_corpus import MathCorpus, ParseDocument,\
-                            format_paragraph, keep_word,\
-                            convert_math_expression
-except ImportError:
-    from tangent.math_corpus import MathCorpus, ParseDocument,\
+
+from tangent_l.math_corpus import MathCorpus, ParseDocument,\
                                     format_paragraph, keep_word,\
                                     convert_math_expression
+
 from nltk.stem.porter import PorterStemmer
 import unittest
 import os

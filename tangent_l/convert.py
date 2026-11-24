@@ -4,14 +4,11 @@ import argparse
 import logging
 import sys
 import os
-try:
-    from math_extractor import MathExtractor
-    from mathdocument import MathDocument
-    from htmlStriper import strip_tags
-except ImportError:
-    from tangent.math_extractor import MathExtractor
-    from tangent.mathdocument import MathDocument
-    from tangent.htmlStriper import strip_tags
+
+from tangent_l.math_extractor import MathExtractor
+from tangent_l.mathdocument import MathDocument
+from tangent_l.htmlStriper import strip_tags
+
 PAYLOAD_DELIMITER = "|__|"
 PAYLOAD_SEPARATOR = ":"
 START_TAG = "#(start)#"
