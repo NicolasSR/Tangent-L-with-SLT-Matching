@@ -1,0 +1,67 @@
+<math altimg="si71.svg">
+    <mrow>
+        <mi id="mi_984">δ</mi>
+        <mo>≤</mo>
+        <mfrac>
+            <mrow>
+                <msub id="msub_259">
+                <mrow>
+                    <mi id="mi_985">ν</mi>
+                </mrow>
+                <mrow>
+                    <mi mathvariant="normal" id="mi_986">min</mi>
+                </mrow>
+                </msub>
+                <msup id="msup_95">
+                <mrow>
+                    <mi id="mi_987">h</mi>
+                </mrow>
+                <mrow>
+                    <mn>2</mn>
+                </mrow>
+                </msup>
+                <mo stretchy="false">/</mo>
+                <mn>12</mn>
+            </mrow>
+            <mrow>
+                <msup id="msup_96">
+                <mrow>
+                    <mi id="mi_988">h</mi>
+                </mrow>
+                <mrow>
+                    <mn>2</mn>
+                </mrow>
+                </msup>
+                <msubsup id="msubsup_15">
+                <mrow>
+                    <mo stretchy="false">‖</mo>
+                    <mi mathvariant="normal" id="mi_989">∇</mi>
+                    <mi id="mi_990" mathvariant="bold">ν</mi>
+                    <mo stretchy="false">‖</mo>
+                </mrow>
+                <mrow>
+                    <mo>∞</mo>
+                </mrow>
+                <mrow>
+                    <mn>2</mn>
+                </mrow>
+                </msubsup>
+                <mo linebreak="badbreak" linebreakstyle="after">+</mo>
+                <mi id="mi_991">C</mi>
+                <msubsup id="msubsup_16">
+                <mrow>
+                    <mi id="mi_992">ν</mi>
+                </mrow>
+                <mrow>
+                    <mi mathvariant="normal" id="mi_993">max</mi>
+                </mrow>
+                <mrow>
+                    <mn>2</mn>
+                </mrow>
+                </msubsup>
+            </mrow>
+        </mfrac>
+        <mspace width="0.2em"/>
+        <mo>,</mo>
+    </mrow>
+</math>

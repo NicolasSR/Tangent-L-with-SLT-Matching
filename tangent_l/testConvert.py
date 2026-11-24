@@ -11,16 +11,19 @@ import os
 WINDOWS = "nt"
 TESTFILES_DIR = "tangent_l/testFiles"
 
-from tangent_l.convert import convert_math_expression,\
-                            check_node,\
-                            check_wildcard,\
-                            determine_node,\
-                            expand_nodes_with_location,\
-                            expand_node_with_wildcards,\
-                            EDGE_PAIR_NODE, COMPOUND_NODE, \
-                            EOL_NODE, TERMINAL_NODE, SYMBOL_PAIR_NODE,\
-                            WILDCARD_MOCK, START_TAG, END_TAG,\
-                            PAYLOAD_DELIMITER as P_D
+from tangent_l.convert import (
+    convert_math_expression,
+    get_slt_from_mathml,
+    check_node,
+    check_wildcard,
+    determine_node,
+    expand_nodes_with_location,
+    expand_node_with_wildcards,
+    EDGE_PAIR_NODE, COMPOUND_NODE, 
+    EOL_NODE, TERMINAL_NODE, SYMBOL_PAIR_NODE,
+    WILDCARD_MOCK, START_TAG, END_TAG,
+    PAYLOAD_DELIMITER as P_D
+    )
 
 class TestBase(unittest.TestCase):
     def loadFile(self, math_file):
@@ -715,6 +718,30 @@ class TestMatrix(TestBase):
         results_list = results.split(" ")
         self.assertEqual(set(expect),set(results_list))
         self.assertEqual(len(expect),len(results_list))
+
+
+class TestSLT(TestBase):
+    def setUp(self):
+        self.debug = True
+        self.file_doc = os.path.join(os.getcwd(), TESTFILES_DIR, "test_slt_doc.xml")
+        self.file_query = os.path.join(os.getcwd(), TESTFILES_DIR, "test_slt_query.xml")
+        self.mathml_doc = self.loadFile(self.file_doc)
+        self.mathml_query = self.loadFile(self.file_query)
+
+    def tearDown(self):
+        pass
+
+    def testDoc(self):
+        results = get_slt_from_mathml(self.mathml_doc, as_string=True)
+        expect = "[V!δ[≤[F![&comma;],o[V!ν[V!h[/[N!12]],a[N!2]],b[V!min]],u[V!h[M!1x1[+[V!C[V!ν,a[N!2],b[V!max]]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+
+    def testQuery(self):
+        results = get_slt_from_mathml(self.mathml_query, as_string=True)
+        expect = "[M!1x1,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
 
 
 
