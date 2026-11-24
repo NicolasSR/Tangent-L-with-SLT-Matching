@@ -5,4 +5,4 @@ A system that explores using traditional text retrieval approaches for formula r
 - `python3 -m pip install .[dev]`
 
 ## Testing
-  `python3 -m tangent_l.testConvert`
+- `python3 -m tangent_l.testConvert`

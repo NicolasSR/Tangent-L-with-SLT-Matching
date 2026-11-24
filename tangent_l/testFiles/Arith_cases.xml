@@ -1,0 +1,164 @@
+<math display="block" id="Arithmetic_function:0">
+ <semantics>
+  <mrow>
+   <mrow>
+    <mi>χ</mi>
+    <mrow>
+     <mo stretchy="false">(</mo>
+     <mi>n</mi>
+     <mo stretchy="false">)</mo>
+    </mrow>
+   </mrow>
+   <mo>=</mo>
+   <mrow>
+    <mo>(</mo>
+    <mfrac>
+     <mrow>
+      <mo>-</mo>
+      <mn>4</mn>
+     </mrow>
+     <mi>n</mi>
+    </mfrac>
+    <mo>)</mo>
+   </mrow>
+   <mo>=</mo>
+   <mrow>
+    <mo>{</mo>
+    <mtable displaystyle="true">
+     <mtr>
+      <mtd columnalign="left">
+       <mn>0</mn>
+      </mtd>
+      <mtd columnalign="left">
+       <mrow>
+        <mrow>
+         <mtext>if</mtext>
+         <mi>n</mi>
+         <mtext>is even</mtext>
+        </mrow>
+        <mo>,</mo>
+       </mrow>
+      </mtd>
+     </mtr>
+     <mtr>
+      <mtd columnalign="left">
+       <mn>1</mn>
+      </mtd>
+      <mtd columnalign="left">
+       <mrow>
+        <mrow>
+         <mrow>
+          <mtext>if</mtext>
+          <mi>n</mi>
+         </mrow>
+         <mo>≡</mo>
+         <mrow>
+          <mn>1</mn>
+          <mo lspace="2.5pt" rspace="2.5pt">mod</mo>
+          <mn>4</mn>
+         </mrow>
+        </mrow>
+        <mo>,</mo>
+       </mrow>
+      </mtd>
+     </mtr>
+     <mtr>
+      <mtd columnalign="left">
+       <mrow>
+        <mo>-</mo>
+        <mn>1</mn>
+       </mrow>
+      </mtd>
+      <mtd columnalign="left">
+       <mrow>
+        <mrow>
+         <mrow>
+          <mtext>if</mtext>
+          <mi>n</mi>
+         </mrow>
+         <mo>≡</mo>
+         <mrow>
+          <mn>3</mn>
+          <mo lspace="2.5pt" rspace="2.5pt">mod</mo>
+          <mn>4</mn>
+         </mrow>
+        </mrow>
+        <mo>,</mo>
+       </mrow>
+      </mtd>
+     </mtr>
+    </mtable>
+   </mrow>
+  </mrow>
+  <annotation-xml encoding="MathML-Content">
+   <apply>
+    <and></and>
+    <apply>
+     <eq></eq>
+     <apply>
+      <times></times>
+      <ci>χ</ci>
+      <ci>n</ci>
+     </apply>
+     <apply>
+      <divide></divide>
+      <apply>
+       <minus></minus>
+       <cn type="integer">4</cn>
+      </apply>
+      <ci>n</ci>
+     </apply>
+    </apply>
+    <apply>
+     <eq></eq>
+     <share href="#.cmml">
+     </share>
+     <apply>
+      <csymbol cd="latexml">cases</csymbol>
+      <cn type="float">0</cn>
+      <apply>
+       <times></times>
+       <mtext>if</mtext>
+       <ci>n</ci>
+       <mtext>is even</mtext>
+      </apply>
+      <cn type="float">1</cn>
+      <apply>
+       <equivalent></equivalent>
+       <apply>
+        <times></times>
+        <mtext>if</mtext>
+        <ci>n</ci>
+       </apply>
+       <apply>
+        <csymbol cd="latexml">modulo</csymbol>
+        <cn type="integer">1</cn>
+        <cn type="integer">4</cn>
+       </apply>
+      </apply>
+      <apply>
+       <minus></minus>
+       <cn type="integer">1</cn>
+      </apply>
+      <apply>
+       <equivalent></equivalent>
+       <apply>
+        <times></times>
+        <mtext>if</mtext>
+        <ci>n</ci>
+       </apply>
+       <apply>
+        <csymbol cd="latexml">modulo</csymbol>
+        <cn type="integer">3</cn>
+        <cn type="integer">4</cn>
+       </apply>
+      </apply>
+     </apply>
+    </apply>
+   </apply>
+  </annotation-xml>
+  <annotation encoding="application/x-tex">
+   \chi(n)=\left(\frac{-4}{n}\right)= y
+  </annotation>
+ </semantics>
+</math>

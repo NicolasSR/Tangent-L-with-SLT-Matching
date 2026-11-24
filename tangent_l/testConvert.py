@@ -646,6 +646,78 @@ class TestRandomEquation(TestBase):
         self.log(results)
         self.assertEqual(" ".join(expect), results)
 
+
+class TestMatrix(TestBase):
+    def setUp(self):
+        self.debug = True
+        self.file = os.path.join(os.getcwd(), TESTFILES_DIR, "Arith_cases.xml")
+        self.mathml = self.loadFile(self.file)
+
+    def tearDown(self):
+        pass
+
+    def testBase(self):
+        results = convert_math_expression(self.mathml,
+                                          terminal_symbols=True,
+                                          compound_symbols=True,
+                                          expand_location=False,
+                                          unbounded=False,
+                                          synonyms=False)
+        expect = [START_TAG,
+                  """#('v!χ','m!()1x1','n')""" + P_D + """-:46#""",
+                  """#(\'m!()1x1\',"[\'n\',\'w\']")""" + P_D + """n:46#""",
+                  """#('m!()1x1','v!n','w')""" + P_D + """n:46#""",
+                  """#('v!n','!0')""" + P_D + """nw:46#""",
+                  """#('m!()1x1','=','n')""" + P_D + """n:46#""",
+                  """#('=','m!()1x1','n')""" + P_D + """nn:46#""",
+                  """#(\'m!()1x1\',"[\'n\',\'w\']")""" + P_D + """nnn:46#""",
+                  """#('m!()1x1','f!','w')""" + P_D + """nnn:46#""",
+                  """#('f!','-','o')""" + P_D + """nnnw:46#""",
+                  """#('-','n!4','n')""" + P_D + """nnnwo:46#""",
+                  """#('n!4','!0')""" + P_D + """3n1w1o1n:46#""",
+                  """#('f!','v!n','u')""" + P_D + """nnnw:46#""",
+                  """#('v!n','!0')""" + P_D + """nnnwu:46#""",
+                  """#(\'f!\',"[\'o\',\'u\']")""" + P_D + """nnnw:46#""",
+                  """#('m!()1x1','=','n')""" + P_D + """nnn:46#""",
+                  """#('=','{','n')""" + P_D + """nnnn:46#""",
+                  """#('{','m!3x2','n')""" + P_D + """nnnnn:46#""",
+                  """#('m!3x2','n!0','w')""" + P_D + """6n:46#""",
+                  """#('n!0','t!if','e')""" + P_D + """6n1w:46#""",
+                  """#(\'t!if\',"[\'n\',\'e\']")""" + P_D + """6n1w1e:46#""",
+                  """#('t!if','v!n','n')""" + P_D + """6n1w1e:46#""",
+                  """#('v!n','t!iseven','n')""" + P_D + """6n1w1e1n:46#""",
+                  """#('t!iseven','comma','n')""" + P_D + """6n1w1e2n:46#""",
+                  """#('comma','!0')""" + P_D + """6n1w1e3n:46#""",
+                  """#('t!if','n!1','e')""" + P_D + """6n1w1e:46#""",
+                  """#('n!1','t!if','e')""" + P_D + """6n1w2e:46#""",
+                  """#('t!if','v!n','n')""" + P_D + """6n1w3e:46#""",
+                  """#('v!n','≡','n')""" + P_D + """6n1w3e1n:46#""",
+                  """#('≡','n!1','n')""" + P_D + """6n1w3e2n:46#""",
+                  """#('n!1','mod','n')""" + P_D + """6n1w3e3n:46#""",
+                  """#('mod','n!4','n')""" + P_D + """6n1w3e4n:46#""",
+                  """#('n!4','comma','n')""" + P_D + """6n1w3e5n:46#""",
+                  """#('comma','!0')""" + P_D + """6n1w3e6n:46#""",
+                  """#('t!if','-','e')""" + P_D + """6n1w3e:46#""",
+                  """#(\'t!if\',"[\'n\',\'e\']")""" + P_D + """6n1w3e:46#""",
+                  """#('-','n!1','n')""" + P_D + """6n1w4e:46#""",
+                  """#('n!1','!0')""" + P_D + """6n1w4e1n:46#""",
+                  """#('-','t!if','e')""" + P_D + """6n1w4e:46#""",
+                  """#(\'-\',"[\'n\',\'e\']")""" + P_D + """6n1w4e:46#""",
+                  """#('t!if','v!n','n')""" + P_D + """6n1w5e:46#""",
+                  """#('v!n','≡','n')""" + P_D + """6n1w5e1n:46#""",
+                  """#('≡','n!3','n')""" + P_D + """6n1w5e2n:46#""",
+                  """#('n!3','mod','n')""" + P_D + """6n1w5e3n:46#""",
+                  """#('mod','n!4','n')""" + P_D + """6n1w5e4n:46#""",
+                  """#('n!4','comma','n')""" + P_D + """6n1w5e5n:46#""",
+                  """#('comma','!0')""" + P_D + """6n1w5e6n:46#""",
+                  END_TAG]
+        self.log(results)
+        results_list = results.split(" ")
+        self.assertEqual(set(expect),set(results_list))
+        self.assertEqual(len(expect),len(results_list))
+
+
+
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
