@@ -786,6 +786,56 @@ class MathSymbol:
         
         return ''.join(str)
 
+    @classmethod
+    def fromstring(cls, slt_string):
+        short_pos_dict = {
+            'n': 'next_elem',
+            'a': 'above',
+            'b': 'below',
+            'o': 'over',
+            'u': 'under',
+            'c': 'pre_above',
+            'd': 'pre_below',
+            'w': 'within',
+            'e': 'element'
+        }
+
+        def _fromstring_recursion(slt_string):
+            count = 0
+            children_dict = {}
+            child_pos = 'n'
+            for i, char in enumerate(slt_string):
+                if char == "[":
+                    if count == 0:
+                        child_start = i+1
+                    count+=1
+                elif char == "]":
+                    count-=1
+                    if count == 0:
+                        children_dict[short_pos_dict[child_pos]] = _fromstring_recursion(slt_string[child_start:i])
+                    elif count <0:
+                        break
+                elif char == "," and count == 0:
+                    if slt_string[i+2] != '[':
+                        print(f"Wrong SLT structure after ','. Should be one character for relative position and '[' after. SLT fragment: {slt_string}")
+                        return None
+                    child_pos=slt_string[i+1]
+
+            if children_dict:
+                tag_end = slt_string.find('[' if 'next_elem' in children_dict else ',')
+                tag = slt_string[:tag_end]
+                return cls(tag, **children_dict)
+            else:
+                return cls(slt_string)
+                    
+        if slt_string[0] == '[' and slt_string[-1] == ']':
+            slt_string = slt_string[1:-1]
+        else:
+            print(f"SLT should start with '[' and end with ']'. Given: {slt_string}")
+            return None
+        return _fromstring_recursion(slt_string)
+
+
     def get_dot_strings(self, prefix, rank_strings, node_names, node_strings, link_strings,
                         highlight=None, unified=None, wildcard=None, generic=False):
 

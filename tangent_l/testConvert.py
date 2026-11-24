@@ -24,6 +24,7 @@ from tangent_l.convert import (
     WILDCARD_MOCK, START_TAG, END_TAG,
     PAYLOAD_DELIMITER as P_D
     )
+from tangent_l.mathsymbol import MathSymbol
 
 class TestBase(unittest.TestCase):
     def loadFile(self, math_file):
@@ -754,6 +755,42 @@ class TestSLT(TestBase):
         expect = "[M!1x1,o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡[‖¡]]]]]"
         self.log(results)
         self.assertEqual(expect,results)
+
+
+class TestSLTFromString(TestBase):
+    def setUp(self):
+        self.debug = True
+
+    def tearDown(self):
+        pass
+
+    def testDoc(self):
+        doc_slt_str = "[V!δ[≤[F![&comma;],o[V!ν[V!h[/[N!12]],a[N!2]],b[V!min]],u[V!h[M!1x1[+[V!C[V!ν,a[N!2],b[V!max]]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2]]]]]"
+        doc_slt_recons = MathSymbol.fromstring(doc_slt_str)
+        results = doc_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(doc_slt_str,results)
+
+    def testDocFormatted(self):
+        doc_slt_str = "[V!δ¡[≤¡[F![&comma;¡],o[V!ν¡[V!h¡[/¡[N!12¡]],a[N!2¡]],b[V!min¡]],u[V!h¡[M!1x1[+¡[V!C¡[V!ν¡,a[N!2¡],b[V!max¡]]]],o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡b[‖¡]]]]],a[N!2¡]]]]]"
+        doc_slt_recons = MathSymbol.fromstring(doc_slt_str)
+        results = doc_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(doc_slt_str,results)
+
+    def testQuery(self):
+        query_slt_str = "[M!1x1,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(query_slt_str,results)
+
+    def testQueryFormatted(self):
+        query_slt_str = "[M!1x1,o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡[‖¡]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(query_slt_str,results)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
