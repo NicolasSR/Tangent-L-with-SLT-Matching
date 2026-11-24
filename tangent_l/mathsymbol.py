@@ -835,6 +835,40 @@ class MathSymbol:
             return None
         return _fromstring_recursion(slt_string)
 
+    def get_exact_search_pattern(self, is_in_n_chain = True):
+        s = "[" + self.tag
+
+        if self.next is None:
+            if is_in_n_chain:
+                s += ',?'
+        else:
+            s += self.next.get_exact_search_pattern(is_in_n_chain)
+
+        
+        for child, label in [(self.above, 'a'), (self.below, 'b'), (self.over, 'o'), (self.under, 'u'),
+                                 (self.pre_above, 'c'), (self.pre_below, 'd'), (self.within, 'w'), (self.element, 'e')]:
+            if child is not None:
+                s+="," + label + child.get_exact_search_pattern(is_in_n_chain=False)
+
+        s += "]"
+
+        return s
+        
+
+        for c in self.children:
+            if c:
+                continues_n_chain = False
+                if c.in_label=='n':
+                    is_terminal = False
+                    if is_in_n_chain:
+                        continues_n_chain = True
+                s = s + "," + c.get_exact_search_pattern(continues_n_chain)
+        if is_terminal and is_in_n_chain:
+            s += ",?"
+        if self.in_label=='-':
+            return "(" + self.tag + ":" + s[1:] + ")"
+        else:
+            return self.in_label + "(" + self.tag + ":" + s[1:] + ")"
 
     def get_dot_strings(self, prefix, rank_strings, node_names, node_strings, link_strings,
                         highlight=None, unified=None, wildcard=None, generic=False):

@@ -792,6 +792,31 @@ class TestSLTFromString(TestBase):
         self.log(results)
         self.assertEqual(query_slt_str,results)
 
+class TestSLTExactSearchPattern(TestBase):
+    def setUp(self):
+        self.debug = True
+
+    def tearDown(self):
+        pass
+
+    def testQuery(self):
+        query_slt_str = "[M!1x1,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.get_exact_search_pattern()
+        expected = "[M!1x1,?,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
+        self.log(results)
+        self.assertEqual(expected,results)
+
+    def testQueryFormatted(self):
+        query_slt_str = "[M!1x1,o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡[‖¡]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.get_exact_search_pattern()
+        expected = "[M!1x1,?,o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡[‖¡]]]]]"
+        self.log(results)
+        self.assertEqual(expected,results)
+
+        
+
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
     unittest.main()
