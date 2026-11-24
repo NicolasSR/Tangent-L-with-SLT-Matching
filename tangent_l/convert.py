@@ -41,7 +41,7 @@ def get_slt_from_mathml(mathml,
     tree_root = MathExtractor.convert_to_mathsymbol(pmml)
 
     if as_string:
-        tree_root = tree_root.toString()
+        tree_root = tree_root.tostring()
 
     if output_pmml:
         return tree_root, pmml

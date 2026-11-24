@@ -374,15 +374,6 @@ class MathSymbol:
             return tag
         if not elem.tag.startswith('{'): # handle missing namespace declaration (FWT) -- should be reported as warning!
             elem.tag = MathML.namespace+elem.tag
-
-        if elem.tag == MathML.math:
-            children = list(elem)
-            if len(children) == 1:
-                return cls.parse_from_mathml(children[0])
-            elif len(children) == 0:
-                return None
-            else:
-                raise Exception('math element with more than 1 child')
         elif elem.tag == MathML.semantics:
             children = list(elem)
             if len(children) >= 1:
@@ -395,7 +386,7 @@ class MathSymbol:
                 return cls.parse_from_mathml(children[0])
             elif len(children) == 0:
                 return None
-        elif (elem.tag == MathML.mrow) or (elem.tag == MathML.mpadded):
+        elif elem.tag in [MathML.mrow, MathML.mpadded, MathML.math]:
             children_map = filter(lambda x: not ignore_tag(x), list(map(cls.parse_from_mathml, elem)))
             children = list(children_map)
             if len(children) > 0:
