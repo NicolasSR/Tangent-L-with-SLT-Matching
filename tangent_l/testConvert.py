@@ -25,6 +25,7 @@ from tangent_l.convert import (
     PAYLOAD_DELIMITER as P_D
     )
 from tangent_l.mathsymbol import MathSymbol
+from tangent_l.matching import match_pattern_in_slt
 
 class TestBase(unittest.TestCase):
     def loadFile(self, math_file):
@@ -725,8 +726,10 @@ class TestSLT(TestBase):
     def setUp(self):
         self.debug = True
         self.file_doc = os.path.join(os.getcwd(), TESTFILES_DIR, "test_slt_doc.xml")
+        self.file_doc_long = os.path.join(os.getcwd(), TESTFILES_DIR, "test_slt_doc_long.xml")
         self.file_query = os.path.join(os.getcwd(), TESTFILES_DIR, "test_slt_query.xml")
         self.mathml_doc = self.loadFile(self.file_doc)
+        self.mathml_doc_long = self.loadFile(self.file_doc_long)
         self.mathml_query = self.loadFile(self.file_query)
 
     def tearDown(self):
@@ -741,6 +744,12 @@ class TestSLT(TestBase):
     def testDocFormatted(self):
         results = get_slt_from_mathml(self.mathml_doc, as_string=True, ignore_formatting=False)
         expect = "[V!δ¡[≤¡[F![&comma;¡],o[V!ν¡[V!h¡[/¡[N!12¡]],a[N!2¡]],b[V!min¡]],u[V!h¡[M!1x1[+¡[V!C¡[V!ν¡,a[N!2¡],b[V!max¡]]]],o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡b[‖¡]]]]],a[N!2¡]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+    
+    def testDocLong(self):
+        results = get_slt_from_mathml(self.mathml_doc_long, as_string=True)
+        expect = "[V!δ[≤[F![&comma;[V!C[V!ν[M!1x1[+[V!h,a[N!2]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2],b[V!max]]]],o[V!ν[V!h[/[N!12]],a[N!2]],b[V!min]],u[V!h[M!1x1[+[V!C[V!ν,a[N!2],b[V!max]]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2]]]]]"
         self.log(results)
         self.assertEqual(expect,results)
 
@@ -815,7 +824,49 @@ class TestSLTExactSearchPattern(TestBase):
         self.log(results)
         self.assertEqual(expected,results)
 
-        
+class TestSLTMatching(TestBase):
+    def setUp(self):
+        self.debug = True
+
+    def tearDown(self):
+        pass
+
+    def testNotFormatted(self):
+        doc_slt_str = "[V!δ[≤[F![&comma;[V!C[V!ν[M!1x1[+[V!h,a[N!2]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2],b[V!max]]]],o[V!ν[V!h[/[N!12]],a[N!2]],b[V!min]],u[V!h[M!1x1[+[V!C[V!ν,a[N!2],b[V!max]]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2]]]]]"
+        query_pattern = "[M!1x1,?,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str)
+        expected_indices_list = [[(25,31),(46,77)],[(139,145),(174,205)]]
+        expected_contents_list = [['[+[V!h,a[N!2]]]'],['[+[V!C[V!ν,a[N!2],b[V!max]]]]']]
+        expected_style_differences_list = [[],[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testFormatted(self):
+        doc_slt_str = "[V!δ¡[≤¡[F![&comma;¡[V!C¡[V!ν¡[M!1x1[+¡[V!h¡,a[N!2¡]]],o[N!2¡],u[∞¡b],w[‖¡[V!∇¡[V!ν¡b[‖¡]]]]],a[N!2¡],b[V!max¡]]]],o[V!ν¡[V!h¡[/¡[N!12¡]],a[N!2¡]],b[V!min¡]],u[V!h¡[M!1x1[+¡[V!C¡[V!ν¡,a[N!2¡],b[V!max¡]]]],o[N!2¡],u[∞¡b],w[‖¡[V!∇¡[V!ν¡f[‖¡]]]]],a[N!2¡]]]]]"
+        query_pattern = "[M!1x1,?,o[N!2¡],u[∞¡b],w[‖¡[V!∇¡[V!ν¡f[‖¡]]]]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str)
+        for indices, contents, styles in zip(matches_indices_list, matches_contents_list, style_differences_list):
+            print("Mathed segments:")
+            for (i_ini, i_end) in indices:
+                print(doc_slt_str[i_ini:i_end])
+                print((i_ini, i_end))
+            print('Contents:', contents)
+            print('Styles:', styles)
+            print()
+        expected_indices_list = [[(164, 170),(204, 243)]]
+        expected_contents_list = [['[+¡[V!C¡[V!ν¡,a[N!2¡],b[V!max¡]]]]']]
+        expected_style_differences_list = [[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
