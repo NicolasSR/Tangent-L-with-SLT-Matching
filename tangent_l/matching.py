@@ -77,23 +77,24 @@ def match_pattern_in_slt(pattern, doc_slt, flexible_format=False):
         restart = False
         for i_p, p in enumerate(pieces):
             if i_p != 0:
-                bracket_count = 0
-                if doc_slt[0] not in [',','[',']']:
+                if doc_slt[0] == '[':
+                    bracket_count = 0
+                    for i_c, c in enumerate(doc_slt):
+                        if c == '[':
+                            bracket_count += 1
+                        elif c == ']':
+                            bracket_count -= 1
+                            if bracket_count==0:
+                                match_inner_content.append(doc_slt_local[:i_c+1])
+                                doc_slt_local=doc_slt_local[i_c+1:]
+                                i_c_local+=i_c+1
+                                break
+                    else:
+                        print('ERROR: Unbalanced parenthesis in doc_slt. Returning no match')
+                        return None
+                elif doc_slt[0] not in [',','[',']']:
                     restart = True
                     break
-                for i_c, c in enumerate(doc_slt):
-                    if c == '[':
-                        bracket_count += 1
-                    elif c == ']':
-                        bracket_count -= 1
-                        if bracket_count==0:
-                            match_inner_content.append(doc_slt_local[:i_c+1])
-                            doc_slt_local=doc_slt_local[i_c+1:]
-                            i_c_local+=i_c+1
-                            break
-                else:
-                    print('ERROR: Unbalanced parenthesis in doc_slt. Returning no match')
-                    return None
             if isinstance(p,tuple):
                 re_pattern_compiled = p[0]
                 formats_orig = p[1]

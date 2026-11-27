@@ -930,14 +930,6 @@ class TestSLTMatching(TestBase):
         self.assertEqual(expected_style_differences_list,style_differences_list)
         query_pattern_bf = "[V!ν¡b,?]"
         matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern_bf, doc_slt_str, flexible_format=False)
-        for indices, contents, styles in zip(matches_indices_list, matches_contents_list, style_differences_list):
-            print("Matched segments:")
-            for (i_ini, i_end) in indices:
-                print(doc_slt_str[i_ini:i_end])
-                print((i_ini, i_end))
-            print('Contents:', contents)
-            print('Styles:', styles)
-            print()
         expected_indices_list = [[(38, 44), (664, 665)]]
         expected_contents_list = [['[V!∇¡[V!u¡b[&comma;¡[V!∇¡[V!v¡b[)¡[−¡[(¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]],a[⊤¡]]]]],b[V!h¡]]]],b[V!h¡]]]']]
         expected_style_differences_list = [[]]
@@ -964,6 +956,70 @@ class TestSLTMatching(TestBase):
         query_pattern_bf = "[V!ν¡bf,?]"
         matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern_bf, doc_slt_str, flexible_format=True)
         expected_style_differences_list = [[('V!ν', 'bf', 'b')], [('V!ν', 'bf', '')], [('V!ν', 'bf', '')], [('V!ν', 'bf', '')]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testEoLSymbol(self):
+        query_pattern = "[V!X¡,?,b[V!h¡]]"
+        doc_slt_str = "[V!v¡b[∈¡[V!X¡,b[V!h¡]]],b[V!h¡]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=False)
+        expected_indices_list = [[(9, 14), (14, 23)]]
+        expected_contents_list = [[]]
+        expected_style_differences_list = [[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testEoLSymbolFormatted(self):
+        query_pattern = "[V!X¡b,?,b[V!h¡]]"
+        doc_slt_str = "[V!v¡b[∈¡[V!X¡f,b[V!h¡]]],b[V!h¡]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=False)
+        expected_indices_list = []
+        expected_contents_list = []
+        expected_style_differences_list = []
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testEoLSymbolFlexibleFormat(self):
+        query_pattern = "[V!X¡,?,b[V!h¡]]"
+        doc_slt_str = "[V!v¡b[∈¡[V!X¡,b[V!h¡]]],b[V!h¡]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
+        expected_indices_list = [[(9, 14), (14, 23)]]
+        expected_contents_list = [[]]
+        expected_style_differences_list = [[('V!X', '', ''), ('V!h', '', '')]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testEoLSymbolFormattedFlexibleFormat(self):
+        query_pattern = "[V!X¡b,?,b[V!h¡]]"
+        doc_slt_str = "[V!v¡b[∈¡[V!X¡f,b[V!h¡]]],b[V!h¡]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
+        for indices, contents, styles in zip(matches_indices_list, matches_contents_list, style_differences_list):
+            print("Matched segments:")
+            for (i_ini, i_end) in indices:
+                print(doc_slt_str[i_ini:i_end])
+                print((i_ini, i_end))
+            print('Contents:', contents)
+            print('Styles:', styles)
+            print()
+        expected_indices_list = [[(9, 15), (15, 24)]]
+        expected_contents_list = [[]]
+        expected_style_differences_list = [[('V!X', 'b', 'f'), ('V!h', '', '')]]
         self.log(matches_indices_list)
         self.log(matches_contents_list)
         self.log(style_differences_list)
