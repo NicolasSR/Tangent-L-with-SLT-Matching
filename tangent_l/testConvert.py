@@ -846,39 +846,31 @@ class TestSLTMatching(TestBase):
         self.assertEqual(expected_style_differences_list,style_differences_list)
 
     def testNotFormattedFlexibleFormat(self):
-            doc_slt_str = "[V!δ[≤[F![&comma;[V!C[V!ν[M!1x1[+[V!h,a[N!2]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2],b[V!max]]]],o[V!ν[V!h[/[N!12]],a[N!2]],b[V!min]],u[V!h[M!1x1[+[V!C[V!ν,a[N!2],b[V!max]]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2]]]]]"
-            query_pattern = "[M!1x1,?,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
-            matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
-            expected_indices_list = [[(25,31),(46,77)],[(139,145),(174,205)]]
-            expected_contents_list = [['[+[V!h,a[N!2]]]'],['[+[V!C[V!ν,a[N!2],b[V!max]]]]']]
-            expected_style_differences_list = [[],[]]
-            self.log(matches_indices_list)
-            self.log(matches_contents_list)
-            self.log(style_differences_list)
-            self.assertEqual(expected_indices_list,matches_indices_list)
-            self.assertEqual(expected_contents_list,matches_contents_list)
-            self.assertEqual(expected_style_differences_list,style_differences_list)
+        doc_slt_str = "[V!δ[≤[F![&comma;[V!C[V!ν[M!1x1[+[V!h,a[N!2]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2],b[V!max]]]],o[V!ν[V!h[/[N!12]],a[N!2]],b[V!min]],u[V!h[M!1x1[+[V!C[V!ν,a[N!2],b[V!max]]]],o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]],a[N!2]]]]]"
+        query_pattern = "[M!1x1,?,o[N!2],u[∞],w[‖[V!∇[V!ν[‖]]]]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
+        expected_indices_list = [[(25,31),(46,77)],[(139,145),(174,205)]]
+        expected_contents_list = [['[+[V!h,a[N!2]]]'],['[+[V!C[V!ν,a[N!2],b[V!max]]]]']]
+        expected_style_differences_list = [[],[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
 
     def testNotFormattedFlexibleFormatWithExclamation(self):
-            doc_slt_str = "[V!δ[M!1x1[+[V!h,a[N!2]]],o[¡],u[∞],w[‖[V!¡[V!ν[¡]]]]],a[N!2],b[V!max]]"
-            query_pattern = "[M!1x1,?,o[¡],u[∞],w[‖[V!¡[V!ν[¡]]]]]"
-            matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
-            for indices, contents, styles in zip(matches_indices_list, matches_contents_list, style_differences_list):
-                print("Matched segments:")
-                for (i_ini, i_end) in indices:
-                    print(doc_slt_str[i_ini:i_end])
-                    print((i_ini, i_end))
-                print('Contents:', contents)
-                print('Styles:', styles)
-                print()
-            expected_indices_list = [[(4, 10),(25, 54)]]
-            expected_contents_list = [['[+[V!h,a[N!2]]]']]
-            expected_style_differences_list = [[('', '', ''), ('V!', '', ''), ('', '', '')]] # TODO Probably should decect cases in which ¡ is part of the tag and discard their style difference tuples (if no actual style info is included)
-            self.log(matches_contents_list)
-            self.log(style_differences_list)
-            self.assertEqual(expected_indices_list,matches_indices_list)
-            self.assertEqual(expected_contents_list,matches_contents_list)
-            self.assertEqual(expected_style_differences_list,style_differences_list)
+        doc_slt_str = "[V!δ[M!1x1[+[V!h,a[N!2]]],o[¡],u[∞],w[‖[V!¡[V!ν[¡]]]]],a[N!2],b[V!max]]"
+        query_pattern = "[M!1x1,?,o[¡],u[∞],w[‖[V!¡[V!ν[¡]]]]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
+        expected_indices_list = [[(4, 10),(25, 54)]]
+        expected_contents_list = [['[+[V!h,a[N!2]]]']]
+        expected_style_differences_list = [[('', '', ''), ('V!', '', ''), ('', '', '')]] # TODO Probably should decect cases in which ¡ is part of the tag and discard their style difference tuples (if no actual style info is included)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
 
     def testFormatted(self):
         doc_slt_str = "[V!δ¡[≤¡[F![&comma;¡[V!C¡[V!ν¡[M!1x1[+¡[V!h¡,a[N!2¡]]],o[N!2¡],u[∞¡b],w[‖¡[V!∇¡[V!ν¡b[‖¡]]]]],a[N!2¡],b[V!max¡]]]],o[V!ν¡[V!h¡[/¡[N!12¡]],a[N!2¡]],b[V!min¡]],u[V!h¡[M!1x1[+¡[V!C¡[V!ν¡,a[N!2¡],b[V!max¡]]]],o[N!2¡],u[∞¡b],w[‖¡[V!∇¡[V!ν¡f[‖¡]]]]],a[N!2¡]]]]]"
@@ -916,12 +908,68 @@ class TestSLTMatching(TestBase):
         expected_indices_list = [[(5, 11),(29, 69)]]
         expected_contents_list = [['[+¡[V!h¡,a[N!2¡]]]']]
         expected_style_differences_list = [[('¡','b','f'), ('∞','bf','fd'), ('‖','',''), ('V!¡','f',''),('V!ν','f','f'), ('¡','','b')]]
+        self.log(matches_indices_list)
         self.log(matches_contents_list)
         self.log(style_differences_list)
         self.assertEqual(expected_indices_list,matches_indices_list)
         self.assertEqual(expected_contents_list,matches_contents_list)
         self.assertEqual(expected_style_differences_list,style_differences_list)
 
+    def testShortFormattedNested(self):
+        doc_slt_str = "[(¡[V!σ¡[V!u¡b[&comma;¡[V!v¡b[)¡[+¡[(¡[V!ν¡b[V!∇¡[V!u¡b[&comma;¡[V!∇¡[V!v¡b[)¡[−¡[(¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]],a[⊤¡]]]]],b[V!h¡]]]],b[V!h¡]]]]]]],b[V!h¡]]],b[V!h¡]]]]"
+        query_pattern = "[V!ν¡,?]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=False)
+        expected_indices_list = [[(100, 105), (622, 623)],[(319, 324), (493, 494)],[(441, 446), (475, 476)]]
+        expected_contents_list = [['[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]'], ['[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]'], ['[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]']]
+        expected_style_differences_list = [[],[],[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+        query_pattern_bf = "[V!ν¡b,?]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern_bf, doc_slt_str, flexible_format=False)
+        for indices, contents, styles in zip(matches_indices_list, matches_contents_list, style_differences_list):
+            print("Matched segments:")
+            for (i_ini, i_end) in indices:
+                print(doc_slt_str[i_ini:i_end])
+                print((i_ini, i_end))
+            print('Contents:', contents)
+            print('Styles:', styles)
+            print()
+        expected_indices_list = [[(38, 44), (664, 665)]]
+        expected_contents_list = [['[V!∇¡[V!u¡b[&comma;¡[V!∇¡[V!v¡b[)¡[−¡[(¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]],a[⊤¡]]]]],b[V!h¡]]]],b[V!h¡]]]']]
+        expected_style_differences_list = [[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testShortFormattedNestedFlexibleFormat(self):
+        doc_slt_str = "[(¡[V!σ¡[V!u¡b[&comma;¡[V!v¡b[)¡[+¡[(¡[V!ν¡b[V!∇¡[V!u¡b[&comma;¡[V!∇¡[V!v¡b[)¡[−¡[(¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]],a[⊤¡]]]]],b[V!h¡]]]],b[V!h¡]]]]]]],b[V!h¡]]],b[V!h¡]]]]"
+        query_pattern = "[V!ν¡,?]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
+        expected_indices_list = [[(38, 44), (664, 665)],[(100, 105), (622, 623)],[(319, 324), (493, 494)],[(441, 446), (475, 476)]]
+        expected_contents_list = [['[V!∇¡[V!u¡b[&comma;¡[V!∇¡[V!v¡b[)¡[−¡[(¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]],a[⊤¡]]]]],b[V!h¡]]]],b[V!h¡]]]'], ['[&comma;¡[V!v¡b[)¡[−¡[(¡[V!p¡[&comma;¡[V!∇¡[⋅¡[V!v¡b[)¡[=¡[(¡[V!f¡b[&comma;¡[V!v¡b[)¡[&comma;¡[(¡[V!q¡[&comma;¡[V!∇¡[⋅¡[V!u¡b[)¡[+¡[V!δ¡[&lsqb;¡[(¡[V!∇¡[V!q¡[&comma;¡[V!∇¡[V!p¡[+¡[V!σ¡[V!u¡b[−¡[N!2¡[V!∇¡[V!u¡b[V!∇¡[V!ν¡[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]]],b[V!h¡]],a[⊤¡]]]],b[V!h¡]]]],b[V!h¡]]]],b[V!h¡]]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]]]]],b[V!h¡]]]]],b[V!h¡]]]]],b[V!h¡]]]'], ['[)¡[+¡[M!1x1[&rsqb;¡[=¡[V!δ¡[(¡[V!f¡b[&comma;¡[V!∇¡[V!q¡[)¡],b[V!h¡]]]]]]]]],u[V!Γ¡],w[(¡[V!∇¡[V!q¡[×¡[V!n¡b[&comma;¡[V!ν¡[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]]]]],b[V!h¡]]]]]]]'], ['[V!∇¡[×¡[V!u¡b[)¡],b[V!h¡]]]]']]
+        expected_style_differences_list = [[('V!ν', '', 'b')], [('V!ν', '', '')], [('V!ν', '', '')], [('V!ν', '', '')]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+        query_pattern_bf = "[V!ν¡bf,?]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern_bf, doc_slt_str, flexible_format=True)
+        expected_style_differences_list = [[('V!ν', 'bf', 'b')], [('V!ν', 'bf', '')], [('V!ν', 'bf', '')], [('V!ν', 'bf', '')]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
 
 if __name__ == "__main__":
     # import sys;sys.argv = ['', 'Test.testName']
