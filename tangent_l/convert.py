@@ -20,7 +20,8 @@ ENCODING = "utf-8"
 def get_slt_from_mathml(mathml,
                         as_string=True,
                         output_pmml=False,
-                        ignore_formatting = True):
+                        ignore_formatting = True,
+                        unify_symbol_tags = False):
     """Returns the slt in terms of a tree of MathSymbols.
 
     Parameters:
@@ -40,7 +41,7 @@ def get_slt_from_mathml(mathml,
         print("Badly formed MathML expression in data file or query : " + mathml,file=sys.stderr)
         return ""
     
-    tree_root = MathExtractor.convert_to_mathsymbol(pmml, ignore_formatting)
+    tree_root = MathExtractor.convert_to_mathsymbol(pmml, ignore_formatting, unify_symbol_tags=unify_symbol_tags)
 
     if as_string:
         tree_root = tree_root.tostring()

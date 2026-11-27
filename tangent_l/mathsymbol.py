@@ -341,7 +341,7 @@ class MathSymbol:
         return root
     
     @classmethod
-    def parse_from_mathml(cls, elem, ignore_formatting=True):
+    def parse_from_mathml(cls, elem, ignore_formatting=True, unify_symbol_tags = False):
         """
         Parse symbol tree from mathml using recursive descent
         :param elem: a node in MathML structure on which an iterator is defined to select children
@@ -394,6 +394,15 @@ class MathSymbol:
                 return ""
             return tag
 
+        def get_symbol_tagged_node(content, specific_type_tag, short_variant, mathml):
+            content = clean(content)
+            if content == '':
+                return cls('W!', mathml=mathml)
+            return cls(specific_type_tag + content + short_variant, mathml=mathml)
+
+        # TODO: Right now, when using unify_symbol_tags as True, there are some different behaviours compared to False,
+        # like using above/below instead of over/under on matrices (see subsup, sub, sup cases).
+
         short_variant=''
         if not ignore_formatting:
             variant = elem.attrib.get('mathvariant', '')
@@ -405,7 +414,7 @@ class MathSymbol:
         if not elem.tag.startswith('{'): # handle missing namespace declaration (FWT) -- should be reported as warning!
             elem.tag = MathML.namespace+elem.tag
         elif elem.tag in [MathML.mrow, MathML.mpadded, MathML.math, MathML.semantics, MathML.mstyle]:
-            children_map = filter(lambda x: not ignore_tag(x), [cls.parse_from_mathml(child, ignore_formatting) for child in elem])
+            children_map = filter(lambda x: not ignore_tag(x), [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem])
             children = list(children_map)
             if len(children) > 0:
                 # handle parenthesized sub-expressions (FWT)
@@ -426,7 +435,7 @@ class MathSymbol:
             else:
                 return None
         elif elem.tag == MathML.mfenced:  # treat like mrow (FWT)
-            children_map = filter(lambda x: not ignore_tag(x), [cls.parse_from_mathml(child, ignore_formatting) for child in elem])
+            children_map = filter(lambda x: not ignore_tag(x), [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem])
             children = list(children_map)
             separators = elem.attrib.get('separators', ',').split()
             opening = elem.attrib.get('open', '(').replace("[","&lsqb;")
@@ -441,7 +450,7 @@ class MathSymbol:
             return cls.list2matrix(row, separators, elem)
         elif elem.tag == MathML.menclose:
             root = cls(elem.attrib.get('notation', 'longdiv'),mathml=[elem])
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) >= 1:   # allowed in standard (FWT)
                 elem = children[0] if children[0] or len(children) == 1 else cls('W!')
                 for i in range(1,len(children)):
@@ -451,20 +460,29 @@ class MathSymbol:
                 root.within = children[0]
             return root
         elif elem.tag == MathML.mn:
-            content = clean(elem.text)
-            return cls('N!' + (content if content != '' else 'W!') + short_variant, mathml=[elem])
+            if unify_symbol_tags:
+                return get_symbol_tagged_node(elem.text,'S!',short_variant,[elem])
+            else:
+                return get_symbol_tagged_node(elem.text,'N!',short_variant,[elem])
         elif elem.tag == MathML.mo:  # future: improve representation (and equivalences) by recognizing and preserving fence="true" and separator="true"
-            return cls(clean(elem.text) + short_variant, mathml=[elem])
+            if unify_symbol_tags:
+                return get_symbol_tagged_node(elem.text,'S!',short_variant,[elem])
+            else:
+                return get_symbol_tagged_node(elem.text,'',short_variant,[elem])
         elif elem.tag == MathML.mi:
-            content = clean(elem.text)
-            return cls('V!' + (content if content != '' else 'W!') + short_variant, mathml=[elem])
+            if unify_symbol_tags:
+                return get_symbol_tagged_node(elem.text,'S!',short_variant,[elem])
+            else:
+                return get_symbol_tagged_node(elem.text,'V!',short_variant,[elem])
         elif elem.tag == MathML.mtext:
-            content = clean(elem.text)
-            return cls('T!' + (content if content != '' else 'W!') + short_variant, mathml=[elem])  # to prevent accidental mis-typing
+            if unify_symbol_tags:
+                return get_symbol_tagged_node(elem.text,'S!',short_variant,[elem])
+            else:
+                return get_symbol_tagged_node(elem.text,'T!',short_variant,[elem])
         elif elem.tag == MathML.mspace:
             return cls('W!',mathml=[elem])
         elif elem.tag == MathML.msub:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) != 2:
@@ -497,7 +515,7 @@ class MathSymbol:
                 root.under = children[1]
             return root
         elif elem.tag == MathML.munder: # FWT - split sub from under
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) != 2:
@@ -522,7 +540,7 @@ class MathSymbol:
             root.under = children[1]
             return root
         elif elem.tag == MathML.msup:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) != 2:
@@ -555,7 +573,7 @@ class MathSymbol:
                 root.over = children[1]
             return root
         elif elem.tag == MathML.mover: # FWT - split sup from over
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) != 2:
@@ -580,7 +598,7 @@ class MathSymbol:
             root.over = children[1]
             return root
         elif elem.tag == MathML.msubsup:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) != 3:
@@ -615,7 +633,7 @@ class MathSymbol:
                 root.over = children[2]
             return root
         elif elem.tag == MathML.munderover: # split from subsup
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) != 3:
@@ -641,7 +659,7 @@ class MathSymbol:
             root.over = children[2]
             return root
         elif elem.tag == MathML.msqrt:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return cls("W!",mathml=[elem])
             else:
@@ -656,7 +674,7 @@ class MathSymbol:
                 root.within = children[0]
                 return root
         elif elem.tag == MathML.mroot:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) == 2:
@@ -675,7 +693,7 @@ class MathSymbol:
                     elem.next = children[i]
                 return children[0]
         elif elem.tag == MathML.mfrac:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if len(children) == 2:
@@ -696,7 +714,7 @@ class MathSymbol:
         elif elem.tag == MathML.none or elem.tag == MathML.mphantom:
             return cls("W!")
         elif elem.tag == MathML.mtd:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             root = children[0] if len(children) > 0 and children[0] else cls('W!')
             elem = root
             for i in range(1,len(children)):
@@ -705,7 +723,7 @@ class MathSymbol:
                 elem.next = children[i]
             return root
         elif elem.tag == MathML.mtr:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) > 0:
                 root = children[0] if children[0] else cls('W!')
                 for i in range(1,len(children)):
@@ -714,13 +732,13 @@ class MathSymbol:
             else:
                 return cls('W!')
         elif elem.tag == MathML.mtable:
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             return cls.make_matrix(children,elem)
         elif elem.tag == MathML.mprescripts:
             return "PreScript"
         elif elem.tag == MathML.mmultiscripts: #FWT: Future: handle cascading presecripts (like sub and sup above)
             # base {sub sup}* [prescript {pre-sub pre-sup}*]
-            children = [cls.parse_from_mathml(child, ignore_formatting) for child in elem]
+            children = [cls.parse_from_mathml(child, ignore_formatting, unify_symbol_tags) for child in elem]
             if len(children) == 0:
                 return None
             if ignore_tag(children[0]):

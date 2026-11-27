@@ -765,6 +765,30 @@ class TestSLT(TestBase):
         self.log(results)
         self.assertEqual(expect,results)
 
+    def testUnifiedSymbolsTag(self):
+        results = get_slt_from_mathml(self.mathml_doc, as_string=True, unify_symbol_tags=True)
+        expect = "[S!δ[S!≤[F![S!&comma;],o[S!ν[S!h[S!/[S!12]],a[S!2]],b[S!min]],u[S!h[M!1x1[S!+[S!C[S!ν,a[S!2],b[S!max]]]],a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]],a[S!2]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+
+    def testDocFormattedUnifiedSymbolTag(self):
+        results = get_slt_from_mathml(self.mathml_doc, as_string=True, ignore_formatting=False, unify_symbol_tags=True)
+        expect = "[S!δ¡[S!≤¡[F![S!&comma;¡],o[S!ν¡[S!h¡[S!/¡[S!12¡]],a[S!2¡]],b[S!min¡]],u[S!h¡[M!1x1[S!+¡[S!C¡[S!ν¡,a[S!2¡],b[S!max¡]]]],a[S!2¡],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡b[S!‖¡]]]]],a[S!2¡]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+
+    def testQueryUnifiedSymbolsTag(self):
+        results = get_slt_from_mathml(self.mathml_query, as_string=True, unify_symbol_tags=True)
+        expect = "[M!1x1,a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+    
+    def testQueryFormattedUnifiedSymbolsTag(self):
+        results = get_slt_from_mathml(self.mathml_query, as_string=True, ignore_formatting=False, unify_symbol_tags=True)
+        expect = "[M!1x1,a[S!2¡],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡[S!‖¡]]]]]"
+        self.log(results)
+        self.assertEqual(expect,results)
+
 
 class TestSLTFromString(TestBase):
     def setUp(self):
@@ -801,6 +825,34 @@ class TestSLTFromString(TestBase):
         self.log(results)
         self.assertEqual(query_slt_str,results)
 
+    def testUnifiedSymbolsTag(self):
+        doc_slt_str = "[S!δ[S!≤[F![S!&comma;],o[S!ν[S!h[S!/[S!12]],a[S!2]],b[S!min]],u[S!h[M!1x1[S!+[S!C[S!ν,a[S!2],b[S!max]]]],a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]],a[S!2]]]]]"
+        doc_slt_recons = MathSymbol.fromstring(doc_slt_str)
+        results = doc_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(doc_slt_str,results)
+
+    def testDocFormattedUnifiedSymbolTag(self):
+        doc_slt_str = "[S!δ¡[S!≤¡[F![S!&comma;¡],o[S!ν¡[S!h¡[S!/¡[S!12¡]],a[S!2¡]],b[S!min¡]],u[S!h¡[M!1x1[S!+¡[S!C¡[S!ν¡,a[S!2¡],b[S!max¡]]]],a[S!2¡],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡b[S!‖¡]]]]],a[S!2¡]]]]]"
+        doc_slt_recons = MathSymbol.fromstring(doc_slt_str)
+        results = doc_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(doc_slt_str,results)
+
+    def testQueryUnifiedSymbolsTag(self):
+        query_slt_str = "[M!1x1,a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(query_slt_str,results)
+        
+    def testQueryFormattedUnifiedSymbolsTag(self):
+        query_slt_str = "[M!1x1,a[S!2¡],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡[S!‖¡]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.tostring()
+        self.log(results)
+        self.assertEqual(query_slt_str,results)
+
 class TestSLTExactSearchPattern(TestBase):
     def setUp(self):
         self.debug = True
@@ -821,6 +873,22 @@ class TestSLTExactSearchPattern(TestBase):
         query_slt_recons = MathSymbol.fromstring(query_slt_str)
         results = query_slt_recons.get_exact_search_pattern()
         expected = "[M!1x1,?,o[N!2¡],u[∞¡],w[‖¡[V!∇¡[V!ν¡[‖¡]]]]]"
+        self.log(results)
+        self.assertEqual(expected,results)
+
+    def testQueryUnifiedSymbolsTag(self):
+        query_slt_str = "[M!1x1,a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.get_exact_search_pattern()
+        expected = "[M!1x1,?,a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]]"
+        self.log(results)
+        self.assertEqual(expected,results)
+        
+    def testQueryFormattedUnifiedSymbolsTag(self):
+        query_slt_str = "[M!1x1,a[S!2¡],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡[S!‖¡]]]]]"
+        query_slt_recons = MathSymbol.fromstring(query_slt_str)
+        results = query_slt_recons.get_exact_search_pattern()
+        expected = "[M!1x1,?,a[S!2¡],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡[S!‖¡]]]]]"
         self.log(results)
         self.assertEqual(expected,results)
 
@@ -1009,6 +1077,34 @@ class TestSLTMatching(TestBase):
         query_pattern = "[V!X¡b,?,b[V!h¡]]"
         doc_slt_str = "[V!v¡b[∈¡[V!X¡f,b[V!h¡]]],b[V!h¡]]"
         matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
+        expected_indices_list = [[(9, 15), (15, 24)]]
+        expected_contents_list = [[]]
+        expected_style_differences_list = [[('V!X', 'b', 'f'), ('V!h', '', '')]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testQueryUnifiedSymbolsTag(self):
+        query_pattern = "[M!1x1,?,a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]]"
+        doc_slt_str = "[S!δ[S!≤[F![S!&comma;],o[S!ν[S!h[S!/[S!12]],a[S!2]],b[S!min]],u[S!h[M!1x1[S!+[S!C[S!ν,a[S!2],b[S!max]]]],a[S!2],b[S!∞],w[S!‖[S!∇[S!ν[S!‖]]]]],a[S!2]]]]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=False)
+        expected_indices_list = [[(67, 73), (104, 141)]]
+        expected_contents_list = [['[S!+[S!C[S!ν,a[S!2],b[S!max]]]]']]
+        expected_style_differences_list = [[]]
+        self.log(matches_indices_list)
+        self.log(matches_contents_list)
+        self.log(style_differences_list)
+        self.assertEqual(expected_indices_list,matches_indices_list)
+        self.assertEqual(expected_contents_list,matches_contents_list)
+        self.assertEqual(expected_style_differences_list,style_differences_list)
+
+    def testQueryUnifiedSymbolsTagFlexibleFormat(self):
+        query_pattern = "[M!1x1,?,a[S!2¡d],b[S!∞¡],w[S!‖¡[S!∇¡[S!ν¡[S!‖¡bf]]]]]"
+        doc_slt_str = "[S!δ¡[S!≤¡[F![S!&comma;¡],o[S!ν¡[S!h¡[S!/¡[S!12¡]],a[S!2¡]],b[S!min¡]],u[S!h¡[M!1x1[S!+¡[S!C¡[S!ν¡,a[S!2¡],b[S!max¡]]]],a[S!2¡],b[S!∞¡b],w[S!‖¡[S!∇¡[S!ν¡[S!‖¡f]]]]],a[S!2]]]]]"
+        matches_indices_list, matches_contents_list, style_differences_list = match_pattern_in_slt(query_pattern, doc_slt_str, flexible_format=True)
         for indices, contents, styles in zip(matches_indices_list, matches_contents_list, style_differences_list):
             print("Matched segments:")
             for (i_ini, i_end) in indices:
@@ -1017,9 +1113,9 @@ class TestSLTMatching(TestBase):
             print('Contents:', contents)
             print('Styles:', styles)
             print()
-        expected_indices_list = [[(9, 15), (15, 24)]]
-        expected_contents_list = [[]]
-        expected_style_differences_list = [[('V!X', 'b', 'f'), ('V!h', '', '')]]
+        expected_indices_list = [[(77, 83), (119, 164)]]
+        expected_contents_list = [['[S!+¡[S!C¡[S!ν¡,a[S!2¡],b[S!max¡]]]]']]
+        expected_style_differences_list = [[('S!2', 'd', ''), ('S!∞', '', 'b'), ('S!‖', '', ''), ('S!∇', '', ''), ('S!ν', '', ''), ('S!‖', 'bf', 'f')]]
         self.log(matches_indices_list)
         self.log(matches_contents_list)
         self.log(style_differences_list)
